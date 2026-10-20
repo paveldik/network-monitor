@@ -1,0 +1,38 @@
+# cisco_interface_rename.expect
+# Изменение описания выбранного интерфейса Cisco-коммутатора.
+# Расположение: /html/network_devices/cisco_interface_rename.expect
+# Входные параметры: argv[0] — IP-адрес, argv[1] — интерфейс, argv[2] —
+# новое описание; учетные данные читаются из системной конфигурации.
+# Выход: новое описание отправляется коммутатору; вывод Expect — stdout.
+# Пример вызова: expect /var/www/html/network_devices/cisco_interface_rename.expect 192.168.22.10 Gi1/0/1 uplink
+# @author  Pavel Dik: paveldik@gmail.com
+# @version 1.0
+set timeout 5
+set script_dir [file dirname [file normalize [info script]]]
+source [file join $script_dir network-monitor-config.tcl]
+set network_monitor_config [load_network_monitor_config]
+set address [lindex $argv 0]
+set interface [lindex $argv 1]
+set descr [lindex $argv 2]
+
+spawn telnet $address
+expect "sername: "
+send "[dict get $network_monitor_config CISCO_USERNAME]\r"
+expect "assword: "
+send "[dict get $network_monitor_config CISCO_PASSWORD]\r"
+expect ">"
+send "en\r"
+expect "assword: "
+send "[dict get $network_monitor_config CISCO_ENABLE_PASSWORD]\r"
+expect "#"
+send "conf t\r"
+expect "#"
+send "int $interface\r"
+expect "#"
+send "desc $descr\r"
+expect "#"
+send "exit\r"
+expect "#"
+send "exit\r"
+expect "#"
+send "logout\r"

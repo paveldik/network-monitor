@@ -1,0 +1,37 @@
+# cisco_interface_nodesc.expect
+# Удаление описания выбранного интерфейса Cisco-коммутатора.
+# Расположение: /html/network_devices/cisco_interface_nodesc.expect
+# Входные параметры: argv[0] — IP-адрес, argv[1] — имя интерфейса; учетные
+# данные читаются из системной конфигурации.
+# Выход: удаляет описание интерфейса на коммутаторе; вывод Expect — stdout.
+# Пример вызова: expect /var/www/html/network_devices/cisco_interface_nodesc.expect 192.168.22.10 Gi1/0/1
+# @author  Pavel Dik: paveldik@gmail.com
+# @version 1.0
+set timeout 5
+set script_dir [file dirname [file normalize [info script]]]
+source [file join $script_dir network-monitor-config.tcl]
+set network_monitor_config [load_network_monitor_config]
+set address [lindex $argv 0]
+set interface [lindex $argv 1]
+
+spawn telnet $address
+expect "sername: "
+send "[dict get $network_monitor_config CISCO_USERNAME]\r"
+expect "assword: "
+send "[dict get $network_monitor_config CISCO_PASSWORD]\r"
+expect ">"
+send "en\r"
+expect "assword: "
+send "[dict get $network_monitor_config CISCO_ENABLE_PASSWORD]\r"
+expect "#"
+send "conf t\r"
+expect "#"
+send "int $interface\r"
+expect "#"
+send "no desc\r"
+expect "#"
+send "exit\r"
+expect "#"
+send "exit\r"
+expect "#"
+send "logout\r"

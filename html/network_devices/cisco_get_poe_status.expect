@@ -1,0 +1,30 @@
+# cisco_get_poe_status.expect
+# Подключение к Cisco-коммутатору по Telnet и чтение состояния PoE-интерфейсов.
+# Расположение: /html/network_devices/cisco_get_poe_status.expect
+# Входные параметры: argv[0] — IP-адрес коммутатора; учетные данные берутся
+# из системной конфигурации.
+# Выход: текст таблицы состояния PoE в stdout; устройство не изменяется.
+# Пример вызова: expect /var/www/html/network_devices/cisco_get_poe_status.expect 192.168.22.10
+# @author  Pavel Dik: paveldik@gmail.com
+# @version 1.0
+set timeout 5
+set script_dir [file dirname [file normalize [info script]]]
+source [file join $script_dir network-monitor-config.tcl]
+set network_monitor_config [load_network_monitor_config]
+set address [lindex $argv 0]
+
+spawn telnet $address
+expect "sername: "
+send "[dict get $network_monitor_config CISCO_USERNAME]\r"
+expect "assword: "
+send "[dict get $network_monitor_config CISCO_PASSWORD]\r"
+expect ">"
+send "en\r"
+expect "assword: "
+send "[dict get $network_monitor_config CISCO_ENABLE_PASSWORD]\r"
+expect "#"
+send "terminal length 0\r"
+expect "#"
+send "show power inline\r"
+expect "#"
+send "logout\r"

@@ -1,0 +1,35 @@
+# cisco_host_rename.expect
+# Переименование Cisco-коммутатора и сохранение измененной конфигурации.
+# Расположение: /html/network_devices/cisco_host_rename.expect
+# Входные параметры: argv[0] — IP-адрес, argv[1] — новое имя; учетные данные
+# берутся из системной конфигурации.
+# Выход: команды выполняются на коммутаторе; диагностический вывод Expect
+# направляется в stdout.
+# Пример вызова: expect /var/www/html/network_devices/cisco_host_rename.expect 192.168.22.10 sw-core
+# @author  Pavel Dik: paveldik@gmail.com
+# @version 1.0
+set timeout 5
+set script_dir [file dirname [file normalize [info script]]]
+source [file join $script_dir network-monitor-config.tcl]
+set network_monitor_config [load_network_monitor_config]
+set address [lindex $argv 0]
+set newname [lindex $argv 1]
+spawn telnet $address
+expect "sername: "
+send "[dict get $network_monitor_config CISCO_USERNAME]\r"
+expect "assword: "
+send "[dict get $network_monitor_config CISCO_PASSWORD]\r"
+expect ">"
+send "en\r"
+expect "assword: "
+send "[dict get $network_monitor_config CISCO_ENABLE_PASSWORD]\r"
+expect "#"
+send "conf t\r"
+expect "#"
+send "hostname $newname\r"
+expect "#"
+send "exit\r"
+expect "#"
+send "wri\r"
+expect "#"
+send "logout\r"
