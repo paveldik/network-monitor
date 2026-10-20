@@ -86,14 +86,14 @@ Apache должен иметь к ним право чтения.
 В репозитории отсутствуют конфигурация Apache, схема/начальные данные MySQL
 и сама конфигурация среды установки. Приложение загружает параметры из
 `/etc/network-monitor/network-monitor.cfg`; образец с примерами заполнения
-значений конфигурационного файла находится в `config/network-monitor.cfg.example`.
+значений конфигурационного файла находится в `setup/network-monitor.cfg.example`.
 
 Для установки конфигурации вне DocumentRoot:
 
 ```sh
 sudo install -d -o root -g www-data -m 0750 /etc/network-monitor
 sudo install -o root -g www-data -m 0640 \
-  config/network-monitor.cfg.example /etc/network-monitor/network-monitor.cfg
+  setup/network-monitor.cfg.example /etc/network-monitor/network-monitor.cfg
 sudoedit /etc/network-monitor/network-monitor.cfg
 ```
 
