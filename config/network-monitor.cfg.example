@@ -1,0 +1,21 @@
+# network-monitor.cfg.example
+# Шаблон системных параметров БД, SNMP и Cisco для приложения мониторинга.
+# Перед использованием скопируйте в /etc/network-monitor/network-monitor.cfg
+# и замените все EXAMPLE_* на значения своей среды.
+# Формат: одна запись ИМЯ=ЗНАЧЕНИЕ на строку, без кавычек и переносов строк.
+# Входные параметры: значения среды установки, подставляемые администратором.
+# Выход: конфигурационный файл, читаемый PHP- и Expect-сценариями.
+# Пример использования: sudo install -m 0640 config/network-monitor.cfg.example /etc/network-monitor/network-monitor.cfg
+# @author  Pavel Dik: paveldik@gmail.com
+# @version 1.0
+DB_HOST=localhost
+DB_PORT=3036
+DB_NAME=switches
+DB_USER=EXAMPLE_db_user
+DB_PASSWORD=EXAMPLE_db_password
+
+SNMP_COMMUNITY=EXAMPLE_snmp_community
+
+CISCO_USERNAME=EXAMPLE_cisco_user
+CISCO_PASSWORD=EXAMPLE_cisco_password
+CISCO_ENABLE_PASSWORD=EXAMPLE_cisco_enable_password
